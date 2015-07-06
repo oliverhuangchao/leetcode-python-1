@@ -1,0 +1,45 @@
+import collections
+
+def toposort(num_courses, prerequisites):
+    incoming = collections.defaultdict(dict)
+    outgoing = collections.defaultdict(dict)
+    zero_incoming_queue = []
+    for course in prerequisites:
+        incoming[course[0]][course[1]] = True
+        outgoing[course[1]][course[0]] = True
+
+    for c in xrange(num_courses):
+        if c not in incoming:
+            zero_incoming_queue.append(c)
+
+    sorted_courses = []
+
+    while zero_incoming_queue:
+        course_with_no_incoming = zero_incoming_queue.pop(0)
+
+        # remove outgoing reference from this course
+        # outgoing[course_with_no_incoming] -> courses that depends on this course
+        # remove the reference
+        for course in outgoing[course_with_no_incoming].keys():
+            # Since we are removing this course from the graph
+            # We will remove the courses that depend on this course
+            del incoming[course][course_with_no_incoming]
+
+            # after we remove the dependency
+            # if this course has zero incoming, we will remove it
+            if not incoming[course]:
+                del incoming[course]
+                zero_incoming_queue.append(course)
+
+        # remove the outward reference
+        # We are official done with this course
+        del outgoing[course_with_no_incoming]
+        # Add this to the sorted list
+        sorted_courses.append(course_with_no_incoming)
+
+    # if this is a DAG
+    # There should be no outgoing courses by the end of it
+    if outgoing:
+        return []
+
+    return sorted_courses
