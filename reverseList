@@ -1,0 +1,18 @@
+def reverseList(self, head):
+        dummy = ListNode(0)
+        while head:
+            next = head.next
+            head.next = dummy.next
+            dummy.next = head
+            head = next
+        return dummy.next
+        
+        
+def reverseList(self, head):
+        return self.doReverse(head, None)
+    def doReverse(self, head, newHead):
+        if head is None:
+            return newHead
+        next = head.next
+        head.next = newHead
+        return self.doReverse(next, head)
