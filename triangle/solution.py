@@ -15,3 +15,14 @@ class Solution:
                     t[row][col] = triangle[row][col] + minsum
             row -= 1
         return t[0][0]
+
+    def minimumTotal2(self, triangle):
+        if not triangle:
+            return 0
+
+        lastLevel = triangle[-1]
+        for i in range(len(triangle) - 2, -1, -1):
+            for j in range(i + 1):
+                lastLevel[j] = min(lastLevel[j], lastLevel[j + 1]) + triangle[i][j]
+
+        return lastLevel[0]
